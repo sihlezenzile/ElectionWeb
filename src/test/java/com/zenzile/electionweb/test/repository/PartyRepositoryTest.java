@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 
+package com.zenzile.electionweb.test.repository;
+
 import static org.testng.Assert.*;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
@@ -14,9 +16,9 @@ import org.testng.annotations.BeforeMethod;
  *
  * @author sihle
  */
-public class NewEmptyTestNGTest {
+public class PartyRepositoryTest {
     
-    public NewEmptyTestNGTest() {
+    public PartyRepositoryTest() {
     }
 
     // TODO add test methods here.

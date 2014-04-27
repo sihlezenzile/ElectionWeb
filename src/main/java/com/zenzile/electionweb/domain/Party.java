@@ -7,6 +7,7 @@
 package com.zenzile.electionweb.domain;
 
 import java.io.Serializable;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,19 +19,23 @@ import javax.persistence.Id;
  */
 @Entity
 public class Party implements Serializable {
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String abbreviation;
-    private String name;
     private Long presidentId;
     private Long deputyId;
+    @Column(unique = true)
+    private String abbreviation;
+    @Column(unique = true)
+    private String name;
+
 
     public Party() {
     }
-    
-    public Party(InnerParty inner)
+
+    private Party(InnerParty inner)
     {
         id = inner.id;
         abbreviation = inner.abbreviation;
@@ -45,6 +50,10 @@ public class Party implements Serializable {
         private String name;
         private Long presidentId;
         private Long deputyId;
+ 
+        public InnerParty(String abre) {
+            this.abbreviation = abre;
+        }        
         
         public InnerParty id(Long value) {
             id = value;
@@ -70,13 +79,18 @@ public class Party implements Serializable {
             return this;
         }
         
-        public InnerParty(Party in)
+        public InnerParty party(Party in)
         {
             id = in.getId();
             abbreviation = in.getAbbreviation();
             name = in.getName();
             deputyId = in.getDeputyId();
             presidentId = in.getPresidentId();
+            return this;
+        }
+        public Party innerParty()
+        {
+            return new Party(this);
         }
     }
     

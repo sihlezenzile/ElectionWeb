@@ -8,7 +8,6 @@ package com.zenzile.electionweb.app.conf;
 import javax.sql.DataSource;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -24,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author sihle
  */
 @Configuration
-@ComponentScan("com.zenzile.electionweb")
+//@ComponentScan("com.zenzile.electionweb")
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "com.zenzile.electionweb.repository")
 
@@ -34,12 +33,18 @@ public class ConnectionConfig {
     public DataSource dataSource() {
         BasicDataSource ds = new org.apache.commons.dbcp.BasicDataSource();
         ds.setDriverClassName("org.apache.derby.jdbc.ClientDriver");
-        ds.setUrl("jdbc:derby://localhost:1527/sample");
-        ds.setUsername("app");
-        ds.setPassword("app");
+        ds.setUrl("jdbc:derby://localhost:1527/sihle");
+        ds.setUsername("IS2560");
+        ds.setPassword("IS2560");
         return ds;
     }
     
+    /**
+     *
+     * @param dataSource
+     * @param jpaVendorAdapter
+     * @return
+     */
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             DataSource dataSource, JpaVendorAdapter jpaVendorAdapter) {

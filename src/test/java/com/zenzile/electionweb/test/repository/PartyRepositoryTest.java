@@ -7,7 +7,9 @@
 package com.zenzile.electionweb.test.repository;
 
 import com.zenzile.electionweb.app.conf.ConnectionConfig;
+import com.zenzile.electionweb.domain.Deputy;
 import com.zenzile.electionweb.domain.Party;
+import com.zenzile.electionweb.domain.President;
 import com.zenzile.electionweb.repository.PartyRepository;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -28,7 +30,8 @@ public class PartyRepositoryTest {
     public static ApplicationContext ctx;
     private Long id;
     private PartyRepository repo;
-    
+    private Deputy deputy;
+    private President president;
     public PartyRepositoryTest() {
     }
 
@@ -39,22 +42,64 @@ public class PartyRepositoryTest {
     // public void hellPersono() {}
     @Test
     public void createParty()
-    {         
-        Long num1 = Long.parseLong("1000");
-        Long num2 = Long.parseLong("3000");
+    {   
+        repo = ctx.getBean(PartyRepository.class);
+        
+        deputy = new Deputy.InnerDeputy("Hellen")
+                .surname("Zille")
+                .party(1L)
+                
+                .innerPresident();
+        president = new President.InnerPresident(1L)
+                .name("Lindiwe")
+                .surname("Mazibuko")
+                .innerPresident();
+        
         Party part = new Party.InnerParty("DA")
                 .name("Democratic Alliance")
-                .deputyId(num1)
-                .president(num2)
+                .deputyId(deputy)
+                .president(president)
                 .innerParty();
          repo.save(part);
          id = part.getId();
          Assert.assertNotNull(part);
     }
     
-    //@Test
+    @Test(dependsOnMethods = "createParty", enabled = false)
+    public void readParty(){
+         repo = ctx.getBean(PartyRepository.class);
+         Party part = repo.findOne(id);
+         Assert.assertEquals(part.getName(), "DA");
+    }
     
+    @Test(dependsOnMethods = "readParty", enabled = false)
+    private void updatePerson(){
+         repo = ctx.getBean(PartyRepository.class);
+         Party part = repo.findOne(id);
+         Party updatedPerson = new Party.InnerParty("Democratic Alliance")
+                 .party(part)
+                 .name("Demo Ally")
+                 .innerParty();
+        
+         repo.save(updatedPerson);
+         
+         Party updated = repo.findOne(id);
+         Assert.assertEquals(updated.getName(), "Demo Ally");
+    } 
     
+      @Test(dependsOnMethods = "updateParty", enabled = false)
+     private void deletePerson(){
+         repo = ctx.getBean(PartyRepository.class);
+         Party person = repo.findOne(id);
+         repo.delete(person);
+         
+         Party del = repo.findOne(id);
+         
+         Assert.assertNull(del);
+         
+         
+     }
+     
     @BeforeClass
     public static void setUpClass() throws Exception {
         ctx = new AnnotationConfigApplicationContext(ConnectionConfig.class);

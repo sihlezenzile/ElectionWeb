@@ -8,6 +8,7 @@ package com.zenzile.electionweb.domain;
 
 import java.io.Serializable;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,9 +24,12 @@ public class Party implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private Long presidentId;
-    private Long deputyId;
+    private Long id;    
+    @Embedded
+    private President presidentId;
+    
+    @Embedded
+    private Deputy deputyId;
     @Column(unique = true)
     private String abbreviation;
     @Column(unique = true)
@@ -48,19 +52,15 @@ public class Party implements Serializable {
         private Long id;
         private String abbreviation;
         private String name;
-        private Long presidentId;
-        private Long deputyId;
+        private President presidentId;
+        private Deputy deputyId;
  
-        public InnerParty(String abre) {
-            this.abbreviation = abre;
-        }        
+        public InnerParty(String abbre) {
+            this.abbreviation = abbre;
+        }
         
         public InnerParty id(Long value) {
             id = value;
-            return this;
-        }
-        public InnerParty abbreviation(String abbre) {
-            abbreviation = abbre;
             return this;
         }
 
@@ -69,12 +69,12 @@ public class Party implements Serializable {
             return this;
         }
         
-        public InnerParty president(Long pre) {
+        public InnerParty president(President pre) {
             presidentId = pre;
             return this;
         }
         
-        public InnerParty deputyId(Long dep) {
+        public InnerParty deputyId(Deputy dep) {
             deputyId = dep;
             return this;
         }
@@ -105,11 +105,11 @@ public class Party implements Serializable {
         return name;
     }
 
-    public Long getPresidentId() {
+    public President getPresidentId() {
         return presidentId;
     }
 
-    public Long getDeputyId() {
+    public Deputy getDeputyId() {
         return deputyId;
     }
 
